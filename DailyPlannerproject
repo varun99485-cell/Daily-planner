@@ -1,0 +1,64 @@
+import java.io.*;
+import java.util.*;
+
+public class DailyPlanner {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        ArrayList<String> tasks = new ArrayList<>();
+        String fileName = "tasks.txt";
+
+        try {
+            File file = new File(fileName);
+            if (file.exists()) {
+                Scanner fileReader = new Scanner(file);
+                while (fileReader.hasNextLine()) {
+                    tasks.add(fileReader.nextLine());
+                }
+                fileReader.close();
+            }
+        } catch (Exception e) {
+            System.out.println("Error loading tasks!");
+        }
+
+        while (true) {
+            System.out.println("\n--- DAILY PLANNER ---");
+            System.out.println("1. Add Task");
+            System.out.println("2. View Tasks");
+            System.out.println("3. Save & Exit");
+            System.out.print("Enter your choice: ");
+            int ch = sc.nextInt();
+            sc.nextLine();
+
+            switch (ch) {
+                case 1:
+                    System.out.print("Enter new task: ");
+                    String task = sc.nextLine();
+                    tasks.add(task);
+                    break;
+
+                case 2:
+                    System.out.println("\nYour Tasks:");
+                    for (int i = 0; i < tasks.size(); i++)
+                        System.out.println((i + 1) + ". " + tasks.get(i));
+                    break;
+
+                case 3:
+                    try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))) {
+                        for (String t : tasks) {
+                            bw.write(t);
+                            bw.newLine();
+                        }
+                        System.out.println("Tasks saved successfully!");
+                    } catch (IOException e) {
+                        System.out.println("Error saving tasks!");
+                    }
+                    sc.close();
+                    return;
+
+                default:
+                    System.out.println("Invalid option!");
+            }
+        }
+    }
+}
